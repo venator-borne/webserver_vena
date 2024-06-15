@@ -1,3 +1,5 @@
+#ifndef THREADPOOL_H
+#define THREADPOOL_H
 #include <exception>
 #include <pthread.h>
 #include <semaphore.h>
@@ -29,3 +31,6 @@ private:
   static void* work(void *arg);
   void run();
 };
+
+
+#endif

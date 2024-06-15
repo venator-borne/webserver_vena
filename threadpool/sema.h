@@ -1,3 +1,5 @@
+#ifndef SEMA_H
+#define SEMA_H
 #include <exception>
 #include <pthread.h>
 #include <semaphore.h>
@@ -15,3 +17,4 @@ public:
   bool post();
 };
 
+#endif

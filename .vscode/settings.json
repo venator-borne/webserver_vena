@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "exception": "cpp",
-    "new": "cpp"
+    "new": "cpp",
+    "atomic": "cpp"
   }
 }

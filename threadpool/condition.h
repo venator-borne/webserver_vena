@@ -1,3 +1,6 @@
+#ifndef CONDITION_H
+#define CONDITION_H
+
 #include <exception>
 #include <pthread.h>
 #include <semaphore.h>
@@ -26,3 +29,4 @@ public:
 };
 
 
+#endif
