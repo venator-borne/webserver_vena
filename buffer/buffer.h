@@ -3,6 +3,11 @@
 
 #include <vector>
 #include <atomic>
+#include <assert.h>
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <sys/uio.h>
 
 class buffer
 {
@@ -19,10 +24,19 @@ public:
   size_t writablebytes() const; //可写多少bytes
   size_t readablebytes() const; //可读多少bytes
   size_t prependablebytes() const; //预留多少bytes(已经读过去多少bytes)
-  void ensurewritable(size_t len); //是否可写
+  void ensurewritable(size_t len); //确保可写，必要时进行扩容
+  void haswritten(size_t len); //写后移动写的下标
+  void hasread(size_t len); //读后移动读的下标
+  const char* getreadindex();
+  const char* getwriteindex();
   
   ssize_t readfd(int fd, int *errno); //将fd中数据读入到buffer中, 涉及到writeIndex的移动
   ssize_t writefd(int fd, int* errno); //将buffer中数据写入到fd当中, 涉及到readIndex的移动
+
+  void append(const std::string& str);
+  void append(const char* str, size_t len);
+  void append(const void* data, size_t len);
+  void append(const buffer& buff);
 
   //移动写下标
   // void 
