@@ -8,6 +8,7 @@
 #include <iterator>
 #include <vector>
 #include <sys/uio.h>
+#include <unistd.h>
 
 class buffer
 {
@@ -27,11 +28,13 @@ public:
   void ensurewritable(size_t len); //确保可写，必要时进行扩容
   void haswritten(size_t len); //写后移动写的下标
   void hasread(size_t len); //读后移动读的下标
-  const char* getreadindex();
-  const char* getwriteindex();
+  const char* getreadindex() const;
+  const char* getwriteindex() const;
+  char* readpeek();
+  char* writepeek();
   
-  ssize_t readfd(int fd, int *errno); //将fd中数据读入到buffer中, 涉及到writeIndex的移动
-  ssize_t writefd(int fd, int* errno); //将buffer中数据写入到fd当中, 涉及到readIndex的移动
+  ssize_t readfd(int fd, int *Errno); //将fd中数据读入到buffer中, 涉及到writeIndex的移动
+  ssize_t writefd(int fd, int* Errno); //将buffer中数据写入到fd当中, 涉及到readIndex的移动
 
   void append(const std::string& str);
   void append(const char* str, size_t len);

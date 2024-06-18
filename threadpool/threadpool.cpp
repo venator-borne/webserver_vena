@@ -3,7 +3,6 @@
 //
 
 #include "threadpool.h"
-#include <iostream>
 
 #ifdef __linux__
   #include <unistd.h>

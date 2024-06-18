@@ -29,12 +29,20 @@ void buffer::hasread(std::size_t len) {
     readIndex += len;
 }
 
-const char * buffer::getreadindex() {
-    return &(buffer_[readIndex]);
+const char * buffer::getreadindex() const{
+  return &(buffer_[readIndex]);
 }
 
-const char * buffer::getwriteindex() {
+const char * buffer::getwriteindex() const{
     return &(buffer_[writeIndex]);
+}
+
+char* buffer::readpeek() {
+  return &(buffer_[readIndex]);
+}
+
+char* buffer::writepeek() {
+  return &(buffer_[writeIndex]);
 }
 
 //TODO: 为什么会存在这两个函数???
@@ -63,6 +71,7 @@ void buffer::makespace(size_t len) {
 
 /**
 * 一系列的append方法，用于向缓冲区添加数据
+* 有像是str字符串, 
 */
 void buffer::append(const std::string& str) {
     append(str.c_str(), str.size());
@@ -78,7 +87,7 @@ void buffer::append(const void* data, size_t len) {
     append(static_cast<const char *>(data), len);
 }
 void buffer::append(const buffer& buff) {
-    //返回buff中所有可读数据
+    //返回buff中所有可读数据, 因为是const对象 只能访问const成员寒素
     append(buff.getreadindex(), buff.writablebytes());
 }
 
@@ -94,19 +103,19 @@ void buffer::append(const buffer& buff) {
  * iovcnt 是 iov 数组中 struct iovec 的数量，即缓冲区的个数。
  * 成功读取的字节数，如果返回值为0，则表示已到达文件末尾。
 */
-ssize_t buffer::readfd(int fd, int *errno) {
+ssize_t buffer::readfd(int fd, int *Errno) {
     size_t len = writablebytes();
     struct iovec iov[2]; //创建一个备用缓冲区, 以免数据不够存放
     char buff[65536];
-    iov[0].iov_base = getwriteindex();
+    iov[0].iov_base = readpeek();
     iov[0].iov_len = len;
 
     iov[1].iov_base = buff;
     iov[1].iov_len = sizeof(buff);
 
-    ssize_t f = readv(fd, iov, 2)
+    ssize_t f = readv(fd, iov, 2);
     if(f < 0) {
-        *errno = errno;
+        *Errno = errno;
     } else if (static_cast<size_t>(f) <= len) {
         haswritten(static_cast<size_t>(f));
     } else {
@@ -117,10 +126,10 @@ ssize_t buffer::readfd(int fd, int *errno) {
     return f;
 }
 
-ssize_t buffer::writefd(int fd, int* errno) {
+ssize_t buffer::writefd(int fd, int* Errno) {
     ssize_t len = write(fd, getreadindex(), readablebytes());
     if(len < 0) {
-        *errno = errno;
+        *Errno = errno;
     } else hasread(len);
     return len;
 }

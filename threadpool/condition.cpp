@@ -1,4 +1,3 @@
-#include <iostream>
 #include "condition.h"
 
 condition::condition(/* args */) {

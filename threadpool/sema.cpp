@@ -1,4 +1,3 @@
-#include <iostream>
 #include "sema.h"
 
 sema::sema(/* args */) {

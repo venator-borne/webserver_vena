@@ -1,5 +1,4 @@
 #include "locker.h"
-#include <iostream>
 
 locker::locker() {
   /*

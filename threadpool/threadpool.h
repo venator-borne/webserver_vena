@@ -5,6 +5,7 @@
 #include <semaphore.h>
 #include <list>
 #include "locker.h"
+#include <iostream>
 #include "sema.h"
 
 template <typename T>

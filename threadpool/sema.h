@@ -3,6 +3,7 @@
 #include <exception>
 #include <pthread.h>
 #include <semaphore.h>
+#include <iostream>
 
 class sema
 {
