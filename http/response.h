@@ -4,6 +4,14 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <unistd.h>
+#include <assert.h>
+
+#include <sys/mman.h>
+#include <sys/stat.h>
+
+#include "../config/server_cfg.h"
+#include "../buffer/buffer.h"
 /**
  * http报文格式
  *  HTTP/1.1 200 OK
@@ -12,6 +20,10 @@
     \r\n
     <body>
 */
+
+/**
+ * 一个状态响应码的枚举
+ * */
 
 /**
  * 此类用于生成http协议中的响应报文
@@ -23,22 +35,39 @@ class response
 private:
   std::string statecode;
   std::string header;
-  std::string body;  
+  std::string body;
+
+  int code_;
+  bool iskeepalive_;
+  std::string path_;
+  std::string srcdir_;
+
+  char* file;
+  //stat数据结构存储的是文件信息，包含文件的各种属性，像是文件类型，权限，大小等
+  struct stat filestat;
   
 public:
   response(/* args */);
   ~response();
+  void init(const std::string& srcDir, std::string path, bool isKeepAlive, int code);
+  void makeresponse(buffer& buff); //生成响应报文
 
-  enum class CODE : size_t;
+  void mmapfile(); //进行文件映射
+  void unmapfile(); //取消文件映射
+  char* File(); //返回文件内容
+  size_t filelen(); //返回文件长度
+
+
 private:
-  void genestatecode();
-  void addheader();
-  void addbody();
+  void genestatecode(buffer& buff);
+  void addheader(buffer& buff);
+  void addbody(buffer& buff);
+  void errorhtml(); //在错误code下，对响应文件stat绑定对应的错误html
 
 private:
   static const std::unordered_map<std::string, std::string> SUFFIX_TYPE;
   static const std::unordered_map<size_t, std::string> CODE_STATUS;
-  CODE code;
+  static const std::unordered_map<int, std::string> CODE_PATH;
 };
 
 

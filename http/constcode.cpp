@@ -1,6 +1,6 @@
 #include "response.h"
 
-enum response::CODE : size_t
+enum CODE : size_t
 {
   Continue = 100,
   Switching_Protocols = 101,
@@ -16,7 +16,7 @@ enum response::CODE : size_t
   Internal_Server_Error = 500,
   Bad_Gateway = 502,
   Service_Unavailable = 503,
-};
+} code;
 
 const std::unordered_map<std::string, std::string> response::SUFFIX_TYPE = {
     {".html", "text/html"},
@@ -45,4 +45,10 @@ const std::unordered_map<size_t, std::string> response::CODE_STATUS = {
     {400, "Bad Request"},
     {403, "Forbidden"},
     {404, "Not Found"},
+};
+
+const std::unordered_map<int, std::string> response::CODE_PATH = {
+    { 400, "/400.html" },
+    { 403, "/403.html" },
+    { 404, "/404.html" },
 };
