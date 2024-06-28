@@ -7,20 +7,12 @@
 
 using namespace std;
 
+#define HTTP_VER "HTTP/1.1"
+#define STATUS_LINE(CODE, STATUS) HTTP_VER " " #CODE " " STATUS
+#define MSG(M) #M
 int main(int argc, char const *argv[])
 {
-    struct utsname buffer;
-
-    if (uname(&buffer) != 0) {
-        perror("uname");
-        return 1;
-    }
-
-    printf("System Name: %s\n", buffer.sysname);
-    printf("Node Name: %s\n", buffer.nodename);
-    printf("Release: %s\n", buffer.release);
-    printf("Version: %s\n", buffer.version);
-    printf("Machine: %s\n", buffer.machine);
+    cout << "<p>" MSG("你好") "</p>" << endl;
 
     return 0;
 }

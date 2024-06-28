@@ -9,6 +9,7 @@
 
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 
 #include "../config/server_cfg.h"
 #include "../buffer/buffer.h"
@@ -52,17 +53,18 @@ public:
   void init(const std::string& srcDir, std::string path, bool isKeepAlive, int code);
   void makeresponse(buffer& buff); //生成响应报文
 
-  void mmapfile(); //进行文件映射
   void unmapfile(); //取消文件映射
   char* File(); //返回文件内容
   size_t filelen(); //返回文件长度
+  std::string filetype(); //返回文件类型
 
 
 private:
-  void genestatecode(buffer& buff);
-  void addheader(buffer& buff);
-  void addbody(buffer& buff);
+  void genestatecode(buffer& buff); //添加报文首行
+  void addheader(buffer& buff); //添加报文头配置信息
+  void addbody(buffer& buff); //添加报文数据
   void errorhtml(); //在错误code下，对响应文件stat绑定对应的错误html
+  void errorcontent(buffer& buff, std::string); //在数据出错的情况下, 在报文中添加错误信息数据
 
 private:
   static const std::unordered_map<std::string, std::string> SUFFIX_TYPE;
